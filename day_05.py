@@ -165,5 +165,7 @@ def process_instructions(instruction_sequence: List[int]):
 
 if __name__ == "__main__":
     input_string = input()
+
     program_sequence = [int(x) for x in input_string.split(",")]
+    
     process_instructions(program_sequence)
