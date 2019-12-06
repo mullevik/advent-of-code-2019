@@ -44,6 +44,37 @@ def print_output(sequence: List[int], in1: Argument):
     print(in1.value(sequence))
 
 
+def jump_if_true(sequence: List[int], in1: Argument, in2: Argument,
+                 program_counter: int) -> int:
+    if in1.value(sequence) != 0:
+        return in2.value(sequence)
+    else:
+        return program_counter + 3
+
+
+def jump_if_false(sequence: List[int], in1: Argument, in2: Argument,
+                  program_counter: int) -> int:
+    if in1.value(sequence) == 0:
+        return in2.value(sequence)
+    else:
+        return program_counter + 3
+
+
+def less_than(sequence: List[int], in1: Argument, in2: Argument,
+              out: Argument):
+    if in1.value(sequence) < in2.value(sequence):
+        sequence[out.address] = 1
+    else:
+        sequence[out.address] = 0
+
+
+def equals(sequence: List[int], in1: Argument, in2: Argument, out: Argument):
+    if in1.value(sequence) == in2.value(sequence):
+        sequence[out.address] = 1
+    else:
+        sequence[out.address] = 0
+
+
 def create_argument(state, address):
     if state == "0":
         return AddressedArgument(address=address)
@@ -96,6 +127,38 @@ def process_instructions(instruction_sequence: List[int]):
                                   instruction_sequence[program_counter + 1])
             print_output(instruction_sequence, in1)
             program_counter += 2
+        elif operand == 5:
+            in1 = create_argument(states[0],
+                                  instruction_sequence[program_counter + 1])
+            in2 = create_argument(states[1],
+                                  instruction_sequence[program_counter + 2])
+            program_counter = jump_if_true(instruction_sequence, in1, in2,
+                                           program_counter)
+        elif operand == 6:
+            in1 = create_argument(states[0],
+                                  instruction_sequence[program_counter + 1])
+            in2 = create_argument(states[1],
+                                  instruction_sequence[program_counter + 2])
+            program_counter = jump_if_false(instruction_sequence, in1, in2,
+                                            program_counter)
+        elif operand == 7:
+            in1 = create_argument(states[0],
+                                  instruction_sequence[program_counter + 1])
+            in2 = create_argument(states[1],
+                                  instruction_sequence[program_counter + 2])
+            out = create_argument(states[2],
+                                  instruction_sequence[program_counter + 3])
+            less_than(instruction_sequence, in1, in2, out)
+            program_counter += 4
+        elif operand == 8:
+            in1 = create_argument(states[0],
+                                  instruction_sequence[program_counter + 1])
+            in2 = create_argument(states[1],
+                                  instruction_sequence[program_counter + 2])
+            out = create_argument(states[2],
+                                  instruction_sequence[program_counter + 3])
+            equals(instruction_sequence, in1, in2, out)
+            program_counter += 4
         else:
             raise ValueError("Unknown operand" + operand)
 
