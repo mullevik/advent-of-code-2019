@@ -65,12 +65,12 @@ class RandomAccessMemory(object):
         for address, value in enumerate(program_sequence):
             self.memory[address] = value
 
-    def __getitem__(self, key):
+    def __getitem__(self, key: int) -> int:
         if key not in self.memory:
             return self.uninitialized_memory_value
         return self.memory[key]
 
-    def __setitem__(self, key, value):
+    def __setitem__(self, key: int, value: int):
         self.memory[key] = value
 
 
@@ -104,6 +104,9 @@ class IntCodeComputer(object):
         while not self.halt:
             instruction = self.memory[self.pc]
             self.process_instruction(instruction)
+
+    def hard_set_memory_cell(self, address: int, value: int):
+        self.memory[address] = value
 
     def process_instruction(self, instruction: int):
         instruction = str(instruction)
